@@ -41,3 +41,10 @@ def book(request, pk):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
+
+    if request.method == "DELETE":
+        book.delete()
+        return Response({
+            'id': pk,
+            'delete': True
+        })
