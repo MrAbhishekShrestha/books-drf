@@ -9,6 +9,19 @@ from rest_framework.decorators import api_view
 
 @api_view(['GET'])
 def book_list(request):
+    """GET request handler to return all books."""
     books = Book.objects.all()  # complex data
     serializer = BookSerializer(books, many=True)  # Json data
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def book_create(request):
+    """POST request handler to add new book."""
+    serializer = BookSerializer(
+        data=request.data)  # converts json -> complex data
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
