@@ -6,9 +6,13 @@ from django.forms import ValidationError
 
 
 class BookSerializer(serializers.ModelSerializer):
+
+    description = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
-        fields = ["id", "title", "number_of_pages", "publish_date", "quantity"]
+        fields = ["id", "title", "number_of_pages",
+                  "publish_date", "quantity", "description"]
         read_only_fields = ["id"]
 
     def validate_title(self, value):
@@ -20,3 +24,6 @@ class BookSerializer(serializers.ModelSerializer):
         if data["number_of_pages"] < 100:
             raise ValidationError("Too few pages. Big Books only.")
         return data
+
+    def get_description(self, data):
+        return f"This book is called {str(data)} and it is {str(data.number_of_pages)} pages long."
