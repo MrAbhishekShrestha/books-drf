@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,10 +76,23 @@ WSGI_APPLICATION = 'books.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# read environment variables
+my_env = environ.Env()
+environ.Env.read_env()
+
+# Raises Django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
+
+DB_DATABASE_NAME = my_env("DB_NAME")
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': my_env("DB_HOST"),
+        'NAME': my_env("DB_NAME"),
+        'USER': my_env("DB_USER"),
+        'PASSWORD': my_env("DB_PASS"),
+        'PORT': '5432'
     }
 }
 
